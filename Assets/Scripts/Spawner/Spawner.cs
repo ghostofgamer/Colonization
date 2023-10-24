@@ -7,7 +7,7 @@ public class Spawner : ObjectPool
     [SerializeField] private Transform _point;
 
     private Transform[] _points;
-    private WaitForSeconds _waitForSeconds = new WaitForSeconds(10f);
+    private WaitForSeconds _waitForSeconds = new WaitForSeconds(5f);
 
     private void Start()
     {

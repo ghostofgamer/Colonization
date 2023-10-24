@@ -11,7 +11,6 @@ public class FreeUnits : MonoBehaviour
     [SerializeField] private Base _base;
     [SerializeField] private Button _goUnitButton;
 
-
     private void Update()
     {
         var filter = _base.UnitMovers.Where(p => p._isGo == false);

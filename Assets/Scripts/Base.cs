@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Base : MonoBehaviour
@@ -10,10 +11,36 @@ public class Base : MonoBehaviour
 
     public UnitMover[] UnitMovers => _unitMovers;
 
+    private List<FirstAid> _firstAids = new List<FirstAid>();
+
+    public void AddItem(FirstAid firstAid)
+    {
+        _firstAids.Add(firstAid);
+    }
+
+    public bool TryGetItem(out FirstAid firstAid)
+    {
+        firstAid = null;
+
+        if (_firstAids.Count > 0)
+        {
+            var filter = _firstAids.First(p => p.gameObject.activeSelf == true);
+            firstAid = filter;
+            return true;
+        }
+
+        return false;
+    }
+
     public void InitUnit()
     {
-        if (_scaner.TryGetItem(out FirstAid firstAid))
-            _unitMovers[0].Init(firstAid.gameObject.transform.position);
+        if (TryGetItem(out FirstAid firstAid))
+        {
+            var unit = _unitMovers.First(p => p._isGo == false);
+            unit.Init(firstAid.gameObject.transform.position);
+            _firstAids.Remove(firstAid);
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
