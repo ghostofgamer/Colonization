@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Score : MonoBehaviour
 {
@@ -9,9 +8,17 @@ public class Score : MonoBehaviour
 
     private int _score;
 
+    public int ScoreAmount => _score;
+
     public void AddScore()
     {
         _score++;
+        Show();
+    }
+
+    public void DecreaseScore(int price)
+    {
+        _score -= price;
         Show();
     }
 

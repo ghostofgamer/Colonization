@@ -1,13 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Spawner : ObjectPool
 {
     [SerializeField] private Transform _point;
+    [SerializeField] private Position[] _positions;
 
     private Transform[] _points;
-    private WaitForSeconds _waitForSeconds = new WaitForSeconds(5f);
+    private WaitForSeconds _waitForSeconds = new WaitForSeconds(1f);
 
     private void Start()
     {
@@ -19,9 +20,15 @@ public class Spawner : ObjectPool
     {
         while (true)
         {
-            GameObject item = TryGetObject();
-            item.SetActive(true);
-            item.transform.position = _points[Random.Range(0, _points.Length)].position;
+            Position position = GetPosition();
+
+            if (position != null)
+            {
+                GameObject item = TryGetObject();
+                item.SetActive(true);
+                item.transform.position = position.gameObject.transform.position;
+            }
+
             yield return _waitForSeconds;
         }
     }
@@ -32,5 +39,15 @@ public class Spawner : ObjectPool
 
         for (int i = 0; i < _points.Length; i++)
             _points[i] = _point.GetChild(i);
+    }
+
+    private Position GetPosition()
+    {
+        var filter = _positions.FirstOrDefault(p => !p.GetComponent<Position>().IsStay);
+
+        if (filter == null)
+            return null;
+
+        return filter;
     }
 }
